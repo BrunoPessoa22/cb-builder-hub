@@ -117,24 +117,21 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-[1.4fr_1fr] gap-0 border border-[var(--line)]">
-            <div className="lg:border-r border-[var(--line)] p-6 md:p-10">
-              <BrazilMap />
-            </div>
-            <div className="p-6 md:p-8 flex flex-col">
-              <div className="tag mb-5">Lista de prioridade</div>
-              <ul className="grid grid-cols-2 gap-x-6 gap-y-3 flex-1">
-                {DEMAND_CITIES.map((c) => (
-                  <li key={c.city} className="flex items-baseline gap-2 text-[14px]">
-                    <span className="mono text-[10px] uppercase tracking-[0.18em] text-[var(--fg-mute)] w-6">{c.state}</span>
-                    <span className="font-semibold tracking-[-0.01em]">{c.city}</span>
-                  </li>
-                ))}
-              </ul>
-              <Link href="/aplicar" className="mt-8 text-[var(--accent)] font-bold flex items-center gap-2 group">
-                Reservar minha cidade <span className="cta-arrow">→</span>
-              </Link>
-            </div>
+          <BrazilMap />
+
+          <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-3 border-t border-[var(--line)] pt-8">
+            {DEMAND_CITIES.map((c) => (
+              <div key={c.city} className="flex items-baseline gap-2 text-[14px]">
+                <span className="mono text-[10px] uppercase tracking-[0.18em] text-[var(--fg-mute)] w-6">{c.state}</span>
+                <span className="font-semibold tracking-[-0.01em]">{c.city}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-10 flex justify-end">
+            <Link href="/aplicar" className="text-[var(--accent)] font-bold flex items-center gap-2 group">
+              Reservar minha cidade <span className="cta-arrow">→</span>
+            </Link>
           </div>
         </div>
       </section>

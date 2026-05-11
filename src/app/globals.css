@@ -224,3 +224,119 @@ button:hover .cta-arrow {
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+/* MapLibre overrides — match CB design system */
+.maplibregl-ctrl-group {
+  background: var(--bg) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.maplibregl-ctrl-group button {
+  background: transparent !important;
+  width: 36px !important;
+  height: 36px !important;
+}
+.maplibregl-ctrl-group button + button {
+  border-top: 1px solid var(--line) !important;
+}
+.maplibregl-ctrl-group button:hover {
+  background: var(--surface) !important;
+}
+.maplibregl-ctrl-group button .maplibregl-ctrl-icon {
+  filter: invert(1) brightness(1.4);
+}
+.maplibregl-ctrl-attrib {
+  background: rgba(10,10,10,0.7) !important;
+  color: var(--fg-mute) !important;
+  font-family: var(--font-geist-mono), ui-monospace, monospace !important;
+  font-size: 9px !important;
+  padding: 2px 6px !important;
+}
+.maplibregl-ctrl-attrib a { color: var(--fg-mute) !important; }
+.maplibregl-ctrl-attrib a:hover { color: var(--accent) !important; }
+
+/* Custom marker */
+.cb-marker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+.cb-marker__dot {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 10px;
+  height: 10px;
+  background: var(--accent);
+  box-shadow: 0 0 0 1px rgba(10,10,10,0.6);
+}
+.cb-marker__pulse {
+  position: absolute;
+  z-index: 1;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.35;
+  animation: cb-pulse 2.4s cubic-bezier(.22,.61,.36,1) infinite;
+}
+@keyframes cb-pulse {
+  0%   { transform: scale(0.6); opacity: 0.5; }
+  80%  { transform: scale(2.2); opacity: 0;   }
+  100% { transform: scale(2.2); opacity: 0;   }
+}
+.cb-marker__label {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  padding: 3px 6px;
+  pointer-events: none;
+  opacity: 0.92;
+  transition: border-color 180ms ease, color 180ms ease;
+}
+.cb-marker__label em {
+  color: var(--fg-mute);
+  font-style: normal;
+}
+.cb-marker:hover .cb-marker__label {
+  border-color: var(--accent);
+  color: var(--accent);
+  opacity: 1;
+}
+.cb-marker:hover .cb-marker__label em {
+  color: var(--accent);
+  opacity: 0.7;
+}
+
+/* Mobile: hide labels by default — show only on tap. Larger touch target. */
+@media (hover: none) and (pointer: coarse) {
+  .cb-marker {
+    width: 28px;
+    height: 28px;
+  }
+  .cb-marker__label {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-4px);
+    transition: opacity 200ms ease, transform 200ms ease;
+  }
+  .cb-marker:active .cb-marker__label,
+  .cb-marker:focus .cb-marker__label,
+  .cb-marker:focus-within .cb-marker__label {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
