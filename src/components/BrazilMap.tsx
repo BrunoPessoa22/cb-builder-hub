@@ -5,6 +5,7 @@ import maplibregl from "maplibre-gl";
 import { CITIES } from "@/lib/cities";
 
 const STYLE_URL = "https://tiles.openfreemap.org/styles/dark";
+const BR_GEOJSON_URL = "/br-states.json";
 
 const BR_BOUNDS: [[number, number], [number, number]] = [
   [-74.5, -34],
@@ -30,7 +31,6 @@ export default function BrazilMap() {
       minZoom: 2.8,
       maxZoom: 9,
       attributionControl: false,
-      cooperativeGestures: false,
       dragRotate: false,
       pitchWithRotate: false,
       touchZoomRotate: true,
@@ -38,9 +38,39 @@ export default function BrazilMap() {
     mapRef.current = map;
 
     map.touchZoomRotate.disableRotation();
-
     map.addControl(new maplibregl.NavigationControl({ showCompass: false, visualizePitch: false }), "top-right");
     map.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-right");
+
+    map.on("load", () => {
+      map.addSource("br", { type: "geojson", data: BR_GEOJSON_URL });
+      map.addLayer({
+        id: "br-fill",
+        type: "fill",
+        source: "br",
+        paint: {
+          "fill-color": "#FFFFFF",
+          "fill-opacity": 0.06,
+        },
+      });
+      map.addLayer({
+        id: "br-outline",
+        type: "line",
+        source: "br",
+        paint: {
+          "line-color": "rgba(255,255,255,0.35)",
+          "line-width": 1.2,
+        },
+      });
+      map.addLayer({
+        id: "br-states-outline",
+        type: "line",
+        source: "br",
+        paint: {
+          "line-color": "rgba(255,255,255,0.10)",
+          "line-width": 0.6,
+        },
+      });
+    });
 
     const sorted = [...CITIES].sort((a, b) => (a.tier === "capital" ? 1 : -1));
     sorted.forEach((c) => {
