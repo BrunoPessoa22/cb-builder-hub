@@ -4,27 +4,7 @@ import { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
 import { CITIES } from "@/lib/cities";
 
-const STYLE = {
-  version: 8 as const,
-  sources: {
-    "carto-dark": {
-      type: "raster" as const,
-      tiles: [
-        "https://a.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}@2x.png",
-        "https://b.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}@2x.png",
-        "https://c.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}@2x.png",
-        "https://d.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}@2x.png",
-      ],
-      tileSize: 256,
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    },
-  },
-  layers: [
-    { id: "bg", type: "background" as const, paint: { "background-color": "#0A0A0A" } },
-    { id: "carto", type: "raster" as const, source: "carto-dark", paint: { "raster-opacity": 0.85 } },
-  ],
-};
+const STYLE_URL = "https://tiles.openfreemap.org/styles/dark";
 
 const BR_BOUNDS: [[number, number], [number, number]] = [
   [-74.5, -34],
@@ -40,7 +20,7 @@ export default function BrazilMap() {
 
     const map = new maplibregl.Map({
       container: containerRef.current,
-      style: STYLE as any,
+      style: STYLE_URL,
       bounds: BR_BOUNDS,
       fitBoundsOptions: { padding: { top: 32, bottom: 32, left: 12, right: 12 }, animate: false },
       maxBounds: [
