@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
-import "maplibre-gl/dist/maplibre-gl.css";
 
 type City = { name: string; state: string; lng: number; lat: number };
 
