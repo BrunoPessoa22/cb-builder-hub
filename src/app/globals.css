@@ -256,87 +256,93 @@ button:hover .cta-arrow {
 .maplibregl-ctrl-attrib a { color: var(--fg-mute) !important; }
 .maplibregl-ctrl-attrib a:hover { color: var(--accent) !important; }
 
-/* Custom marker */
+/* Custom marker — 2 tiers: capital (bigger) vs polo (smaller). */
 .cb-marker {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
   cursor: pointer;
 }
+.cb-marker--capital { width: 18px; height: 18px; z-index: 2; }
+.cb-marker--polo    { width: 14px; height: 14px; z-index: 1; }
+
 .cb-marker__dot {
   position: relative;
   z-index: 2;
   display: block;
-  width: 10px;
-  height: 10px;
   background: var(--accent);
-  box-shadow: 0 0 0 1px rgba(10,10,10,0.6);
+  box-shadow: 0 0 0 1.5px rgba(10,10,10,0.85);
 }
+.cb-marker--capital .cb-marker__dot { width: 11px; height: 11px; }
+.cb-marker--polo    .cb-marker__dot { width: 7px;  height: 7px; }
+
 .cb-marker__pulse {
   position: absolute;
   z-index: 1;
-  width: 18px;
-  height: 18px;
   border-radius: 50%;
   background: var(--accent);
   opacity: 0.35;
   animation: cb-pulse 2.4s cubic-bezier(.22,.61,.36,1) infinite;
 }
+.cb-marker--capital .cb-marker__pulse { width: 22px; height: 22px; }
+.cb-marker--polo    .cb-marker__pulse { width: 14px; height: 14px; opacity: 0.25; animation-duration: 3s; }
+
 @keyframes cb-pulse {
   0%   { transform: scale(0.6); opacity: 0.5; }
   80%  { transform: scale(2.2); opacity: 0;   }
   100% { transform: scale(2.2); opacity: 0;   }
 }
+
 .cb-marker__label {
   position: absolute;
-  top: calc(100% + 6px);
+  top: calc(100% + 5px);
   left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
   font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: 10px;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--fg);
   background: var(--bg);
   border: 1px solid var(--line);
-  padding: 3px 6px;
+  padding: 2px 5px;
   pointer-events: none;
-  opacity: 0.92;
-  transition: border-color 180ms ease, color 180ms ease;
+  transition: border-color 180ms ease, color 180ms ease, opacity 180ms ease;
 }
-.cb-marker__label em {
-  color: var(--fg-mute);
-  font-style: normal;
-}
-.cb-marker:hover .cb-marker__label {
+.cb-marker--capital .cb-marker__label { font-size: 10px; opacity: 0.95; }
+.cb-marker--polo    .cb-marker__label { font-size: 9px;  opacity: 0; }
+
+.cb-marker__label em { color: var(--fg-mute); font-style: normal; }
+
+.cb-marker:hover { z-index: 10; }
+.cb-marker:hover .cb-marker__label,
+.cb-marker:hover .cb-marker__label em {
   border-color: var(--accent);
   color: var(--accent);
   opacity: 1;
 }
-.cb-marker:hover .cb-marker__label em {
-  color: var(--accent);
-  opacity: 0.7;
-}
+.cb-marker--polo:hover .cb-marker__label em { color: var(--accent); opacity: 0.7; }
 
-/* Mobile: hide labels by default — show only on tap. Larger touch target. */
+/* Polo labels appear when zoomed in (handled via JS would be ideal — fallback: keep hidden,
+   capitals carry the readable layer; mobile shows on tap). */
+
+/* Mobile: hide ALL labels by default, show on tap. Bigger touch targets. */
 @media (hover: none) and (pointer: coarse) {
-  .cb-marker {
-    width: 28px;
-    height: 28px;
-  }
-  .cb-marker__label {
-    opacity: 0;
-    transform: translateX(-50%) translateY(-4px);
-    transition: opacity 200ms ease, transform 200ms ease;
-  }
+  .cb-marker--capital { width: 30px; height: 30px; }
+  .cb-marker--polo    { width: 24px; height: 24px; }
+  .cb-marker__label   { opacity: 0; }
   .cb-marker:active .cb-marker__label,
-  .cb-marker:focus .cb-marker__label,
+  .cb-marker:focus  .cb-marker__label,
   .cb-marker:focus-within .cb-marker__label {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .cb-marker:active .cb-marker__label em,
+  .cb-marker:focus  .cb-marker__label em,
+  .cb-marker:focus-within .cb-marker__label em {
+    color: var(--accent);
+    opacity: 0.7;
   }
 }

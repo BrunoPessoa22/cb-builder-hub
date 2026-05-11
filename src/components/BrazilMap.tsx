@@ -2,23 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
-
-type City = { name: string; state: string; lng: number; lat: number };
-
-const CITIES: City[] = [
-  { name: "Manaus",         state: "AM", lng: -60.025, lat: -3.10 },
-  { name: "Fortaleza",      state: "CE", lng: -38.543, lat: -3.71 },
-  { name: "Recife",         state: "PE", lng: -34.881, lat: -8.05 },
-  { name: "Salvador",       state: "BA", lng: -38.510, lat: -12.97 },
-  { name: "Brasília",       state: "DF", lng: -47.929, lat: -15.78 },
-  { name: "Goiânia",        state: "GO", lng: -49.253, lat: -16.68 },
-  { name: "Belo Horizonte", state: "MG", lng: -43.940, lat: -19.92 },
-  { name: "Rio de Janeiro", state: "RJ", lng: -43.196, lat: -22.91 },
-  { name: "São Paulo",      state: "SP", lng: -46.633, lat: -23.55 },
-  { name: "Curitiba",       state: "PR", lng: -49.273, lat: -25.43 },
-  { name: "Florianópolis",  state: "SC", lng: -48.548, lat: -27.59 },
-  { name: "Porto Alegre",   state: "RS", lng: -51.230, lat: -30.03 },
-];
+import { CITIES } from "@/lib/cities";
 
 const STYLE = {
   version: 8 as const,
@@ -43,8 +27,8 @@ const STYLE = {
 };
 
 const BR_BOUNDS: [[number, number], [number, number]] = [
-  [-78, -36],
-  [-30, 8],
+  [-74.5, -34],
+  [-32, 6],
 ];
 
 export default function BrazilMap() {
@@ -58,13 +42,13 @@ export default function BrazilMap() {
       container: containerRef.current,
       style: STYLE as any,
       bounds: BR_BOUNDS,
-      fitBoundsOptions: { padding: 30 },
+      fitBoundsOptions: { padding: { top: 32, bottom: 32, left: 12, right: 12 }, animate: false },
       maxBounds: [
-        [-90, -45],
-        [-20, 15],
+        [-90, -42],
+        [-22, 12],
       ],
-      minZoom: 3,
-      maxZoom: 8,
+      minZoom: 2.8,
+      maxZoom: 9,
       attributionControl: false,
       cooperativeGestures: false,
       dragRotate: false,
@@ -76,11 +60,12 @@ export default function BrazilMap() {
     map.touchZoomRotate.disableRotation();
 
     map.addControl(new maplibregl.NavigationControl({ showCompass: false, visualizePitch: false }), "top-right");
-    map.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-left");
+    map.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-right");
 
-    CITIES.forEach((c) => {
+    const sorted = [...CITIES].sort((a, b) => (a.tier === "capital" ? 1 : -1));
+    sorted.forEach((c) => {
       const el = document.createElement("div");
-      el.className = "cb-marker";
+      el.className = `cb-marker cb-marker--${c.tier}`;
       el.innerHTML = `
         <span class="cb-marker__pulse"></span>
         <span class="cb-marker__dot"></span>
@@ -91,17 +76,34 @@ export default function BrazilMap() {
         .addTo(map);
     });
 
+    const onResize = () => {
+      try {
+        map.fitBounds(BR_BOUNDS, { padding: { top: 32, bottom: 32, left: 12, right: 12 }, animate: false });
+      } catch {}
+    };
+    window.addEventListener("resize", onResize);
+
     return () => {
+      window.removeEventListener("resize", onResize);
       map.remove();
       mapRef.current = null;
     };
   }, []);
 
+  const capitalCount = CITIES.filter(c => c.tier === "capital").length;
+  const poloCount = CITIES.filter(c => c.tier === "polo").length;
+
   return (
-    <div className="relative w-full h-[480px] md:h-[560px] border border-[var(--line)]">
+    <div className="relative w-full h-[420px] sm:h-[520px] lg:h-[600px] border border-[var(--line)]">
       <div ref={containerRef} className="absolute inset-0" />
-      <div className="absolute top-3 left-3 z-10 mono text-[10px] uppercase tracking-[0.2em] text-[var(--fg-mute)] bg-[var(--bg)]/80 backdrop-blur px-2 py-1 border border-[var(--line)] pointer-events-none">
-        12 cidades prioritárias
+      <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5 pointer-events-none">
+        <div className="mono text-[10px] uppercase tracking-[0.2em] text-[var(--fg-mute)] bg-[var(--bg)]/85 backdrop-blur px-2 py-1 border border-[var(--line)]">
+          {capitalCount + poloCount} cidades prioritárias
+        </div>
+        <div className="mono text-[9px] uppercase tracking-[0.18em] text-[var(--fg-mute)] bg-[var(--bg)]/85 backdrop-blur px-2 py-1 border border-[var(--line)] flex items-center gap-3">
+          <span className="flex items-center gap-1.5"><span className="block w-2.5 h-2.5 bg-[var(--accent)]"></span>capital</span>
+          <span className="flex items-center gap-1.5"><span className="block w-1.5 h-1.5 bg-[var(--accent)]"></span>polo</span>
+        </div>
       </div>
     </div>
   );

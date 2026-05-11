@@ -3,21 +3,10 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import PartnerBadges from "@/components/PartnerBadges";
 import BrazilMap from "@/components/BrazilMap";
+import { CITIES } from "@/lib/cities";
 
-const DEMAND_CITIES = [
-  { city: "São Paulo", state: "SP" },
-  { city: "Rio de Janeiro", state: "RJ" },
-  { city: "Belo Horizonte", state: "MG" },
-  { city: "Curitiba", state: "PR" },
-  { city: "Porto Alegre", state: "RS" },
-  { city: "Recife", state: "PE" },
-  { city: "Florianópolis", state: "SC" },
-  { city: "Brasília", state: "DF" },
-  { city: "Goiânia", state: "GO" },
-  { city: "Fortaleza", state: "CE" },
-  { city: "Salvador", state: "BA" },
-  { city: "Manaus", state: "AM" },
-];
+const CAPITAL_CITIES = CITIES.filter(c => c.tier === "capital");
+const POLO_CITIES = CITIES.filter(c => c.tier === "polo");
 
 const PILLARS = [
   {
@@ -109,27 +98,45 @@ export default function Home() {
           <div className="grid gap-12 md:grid-cols-[1.1fr_1fr] md:gap-20 items-end mb-16">
             <div>
               <div className="tag tag-accent mb-5">Cobertura nacional</div>
-              <h2 className="h-section">Cidades onde queremos um builder.</h2>
+              <h2 className="h-section">Onde queremos um builder.</h2>
             </div>
             <p className="lead">
-              Programa aberto pra qualquer cidade do Brasil. As marcadas no mapa são prioridade —
-              quem aplica primeiro vira referência local.
+              57 cidades prioritárias: 27 capitais + 30 polos regionais. Quem aplica primeiro vira a referência local.
+              Aplicação aberta a qualquer cidade com 100k+ habitantes.
             </p>
           </div>
 
           <BrazilMap />
 
-          <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-3 border-t border-[var(--line)] pt-8">
-            {DEMAND_CITIES.map((c) => (
-              <div key={c.city} className="flex items-baseline gap-2 text-[14px]">
-                <span className="mono text-[10px] uppercase tracking-[0.18em] text-[var(--fg-mute)] w-6">{c.state}</span>
-                <span className="font-semibold tracking-[-0.01em]">{c.city}</span>
-              </div>
-            ))}
+          <div className="mt-12 border-t border-[var(--line)] pt-10">
+            <div className="tag mb-5">27 capitais</div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-3">
+              {CAPITAL_CITIES.map((c) => (
+                <div key={c.name} className="flex items-baseline gap-2 text-[14px]">
+                  <span className="mono text-[10px] uppercase tracking-[0.18em] text-[var(--fg-mute)] w-6">{c.state}</span>
+                  <span className="font-semibold tracking-[-0.01em]">{c.name}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className="mt-10 flex justify-end">
-            <Link href="/aplicar" className="text-[var(--accent)] font-bold flex items-center gap-2 group">
+          <div className="mt-10">
+            <div className="tag mb-5">{POLO_CITIES.length} polos regionais</div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-3">
+              {POLO_CITIES.map((c) => (
+                <div key={c.name} className="flex items-baseline gap-2 text-[13px]">
+                  <span className="mono text-[10px] uppercase tracking-[0.18em] text-[var(--fg-mute)] w-6">{c.state}</span>
+                  <span className="text-[var(--fg-soft)] tracking-[-0.01em]">{c.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-10 p-5 border border-[var(--line)] bg-[var(--surface)] flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="text-[14px] text-[var(--fg-soft)]">
+              Sua cidade não tá listada? <strong className="text-[var(--fg)]">Aplicação aberta a qualquer cidade com 100k+ habitantes.</strong>
+            </div>
+            <Link href="/aplicar" className="text-[var(--accent)] font-bold flex items-center gap-2 group whitespace-nowrap mono text-[12px] uppercase tracking-[0.16em]">
               Reservar minha cidade <span className="cta-arrow">→</span>
             </Link>
           </div>
