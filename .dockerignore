@@ -1,0 +1,9 @@
+node_modules
+.next
+.git
+.env*.local
+data/*.json
+!data/.gitkeep
+*.log
+.DS_Store
+README.md
