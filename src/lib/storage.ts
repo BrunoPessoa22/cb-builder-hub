@@ -47,6 +47,7 @@ export type Application = {
   investAmount?: number;
   notes?: string;
   lastStep?: number;
+  source?: string;
 };
 
 export type Contribution = {
