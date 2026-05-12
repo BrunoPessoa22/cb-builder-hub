@@ -26,8 +26,11 @@ export default function Footer() {
           </ul>
         </div>
       </div>
-      <div className="rule-t py-5 text-center">
+      <div className="rule-t py-5 px-6 md:px-10 flex flex-col md:flex-row md:items-center md:justify-between gap-3 max-w-7xl mx-auto">
         <span className="tag">© 2026 Cultura Builder · Todos os direitos reservados</span>
+        <span className="tag">
+          AWS Partner Network · NVIDIA Inception Program · Anthropic Partner
+        </span>
       </div>
     </footer>
   );

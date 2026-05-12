@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import PartnerBadges from "@/components/PartnerBadges";
 import BrazilMap from "@/components/BrazilMap";
 import { CITIES } from "@/lib/cities";
+import { SITE } from "@/lib/seo";
 
 const CAPITAL_CITIES = CITIES.filter(c => c.tier === "capital");
 const POLO_CITIES = CITIES.filter(c => c.tier === "polo");
@@ -46,9 +47,63 @@ const FAQS = [
   },
 ];
 
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQS.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+
+const jobPostingJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "JobPosting",
+  title: "Builder Local Certificado em IA — Cultura Builder",
+  description:
+    "<p>A Cultura Builder seleciona <strong>builders locais certificados</strong> para operar como parceiros regionais em cidades brasileiras. O builder treina times corporativos em IA e implementa agentes em produção, usando a marca, os leads e o playbook da CB.</p>" +
+    "<p><strong>O que você faz:</strong> treinamentos presenciais ou remotos para empresas (10–60 pessoas); projetos de 2–6 semanas implementando agentes de IA (atendimento, automação interna, copiloto comercial); retainer mensal de manutenção e evolução.</p>" +
+    "<p><strong>O que a Cultura Builder entrega:</strong> marca consolidada, leads inbound da sua região, playbook comercial e técnico, treinamento contínuo, parcerias com AWS Partner Network, NVIDIA Inception Program e Anthropic.</p>" +
+    "<p><strong>Pré-requisito:</strong> ser builder já certificado pela Cultura Builder (cadastro em hub.culturabuilder.com). Portfólio de projetos de IA reais (GitHub, deploys públicos).</p>" +
+    "<p><strong>Modelo de remuneração:</strong> rev-share definido caso a caso na call de aprovação. Modelo de freelancer certificado (sem investimento) ou franquia leve com exclusividade regional (a partir de R$ 15.000).</p>",
+  datePosted: "2026-05-01",
+  validThrough: "2026-12-31",
+  employmentType: "CONTRACTOR",
+  hiringOrganization: {
+    "@type": "Organization",
+    name: SITE.org.name,
+    sameAs: SITE.org.url,
+    logo: SITE.org.logo,
+  },
+  applicantLocationRequirements: {
+    "@type": "Country",
+    name: "Brasil",
+  },
+  jobLocationType: "TELECOMMUTE",
+  directApply: true,
+  url: `${SITE.url}/aplicar`,
+  industry: "Inteligência Artificial / Consultoria",
+  occupationalCategory: "15-1252.00 Software Developers / 13-1161.00 Market Research Analysts",
+  qualifications:
+    "Certificação Cultura Builder; portfólio de projetos de IA em produção; capacidade de comunicação técnica e comercial.",
+  responsibilities:
+    "Identificar e atender empresas locais; conduzir treinamentos corporativos em IA; implementar agentes/automações; gerir retainer mensal.",
+  skills:
+    "Agentes de IA, automações (n8n/Zapier/Make), web apps (Next.js, React), backend/APIs, treinamento corporativo, vendas B2B.",
+};
+
 export default function Home() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingJsonLd) }}
+      />
       <Nav />
 
       <section className="relative overflow-hidden edge-b">
@@ -62,8 +117,9 @@ export default function Home() {
           </h1>
 
           <p className="lead mt-10 max-w-[60ch]">
-            Empresas de todo o Brasil estão procurando alguém perto pra treinar times em IA e implementar agentes no negócio.
-            A Cultura Builder dá a marca, os leads, o playbook e a comunidade — você opera localmente.
+            Toda semana empresas pedem na CB alguém da região pra treinar o time em IA e
+            implementar agentes em produção. A Cultura Builder entrega a marca, os leads,
+            o playbook e a comunidade. Você opera na sua cidade.
           </p>
 
           <div className="mt-12 flex flex-col sm:flex-row gap-3">
@@ -89,6 +145,35 @@ export default function Home() {
 
           <div className="mt-16">
             <PartnerBadges />
+          </div>
+        </div>
+      </section>
+
+      <section className="edge-b">
+        <div className="mx-auto max-w-7xl px-6 md:px-10 py-20 md:py-28 grid md:grid-cols-[1fr_1.4fr] gap-12 md:gap-20">
+          <div>
+            <div className="tag tag-accent mb-5">Manifesto</div>
+            <h2 className="h-section">Por que builder local.</h2>
+          </div>
+          <div className="space-y-6 text-[17px] leading-[1.65] text-[var(--fg-soft)] max-w-[60ch]">
+            <p>
+              A pergunta que mais chega nas DMs da Cultura Builder não muda há meses:
+              <em className="text-[var(--fg)] not-italic"> "tem alguém da CB pra ajudar a implementar isso aqui na minha empresa?"</em>
+            </p>
+            <p>
+              A resposta sempre veio do mesmo time pequeno em São Paulo. Mas a demanda não é de SP —
+              é de Recife, de Caxias, de Manaus, de Foz, de Vitória da Conquista. Empresas locais querem
+              alguém que conheça a economia local, fale a língua do dono, almoçe junto.
+            </p>
+            <p>
+              É o que esse programa resolve. A CB não vai abrir filial em cinquenta cidades. Mas pode
+              certificar um builder em cada uma — alguém que já constrói com IA, conhece a região,
+              e quer fazer disso uma carreira. Você opera. A gente sustenta a marca, traz o lead,
+              entrega o playbook.
+            </p>
+            <p className="mono text-[12px] uppercase tracking-[0.18em] text-[var(--fg-mute)] pt-4 border-t border-[var(--line)]">
+              — Bruno Pessoa, fundador · Cultura Builder
+            </p>
           </div>
         </div>
       </section>
@@ -147,7 +232,7 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-6 md:px-10 py-24 md:py-32">
           <div className="mb-16 max-w-3xl">
             <div className="tag tag-accent mb-5">Como você opera</div>
-            <h2 className="h-section">Três frentes de receita. Você escolhe onde quer começar.</h2>
+            <h2 className="h-section">Três frentes de receita. Comece pela que combina com sua entrada.</h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-0 border border-[var(--line)]">
