@@ -1,8 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import maplibregl from "maplibre-gl";
+import * as maplibregl from "maplibre-gl";
 import { CITIES } from "@/lib/cities";
+
+// maplibre-gl 6 finds its worker next to import.meta.url, which webpack turns
+// into a file:// path, so hand it the worker that webpack emits as an asset.
+const WORKER_URL = new URL("maplibre-gl/dist/maplibre-gl-worker.mjs", import.meta.url).href;
 
 const STYLE_URL = "https://tiles.openfreemap.org/styles/dark";
 const BR_GEOJSON_URL = "/br-states.json";
@@ -33,6 +37,7 @@ export default function BrazilMap() {
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
+    maplibregl.setWorkerUrl(WORKER_URL);
     const map = new maplibregl.Map({
       container: containerRef.current,
       style: STYLE_URL,
